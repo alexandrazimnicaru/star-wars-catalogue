@@ -44,9 +44,13 @@ const renderButton = (parent, dataAttrs = {}, title = 'Read more') => {
   return parent;
 };
 
-export const renderItem = (title, listItems, btnAttrs = {}) => {
+export const renderItem = (title, listItems) => {
   const li = document.createElement('li');
-  return renderButton(renderList(renderTitle(li, title), listItems), btnAttrs);
+  return renderList(renderTitle(li, title), listItems);
+};
+
+export const renderItemWithReadMore = (title, listItems, btnAttrs = {}) => {
+  return renderButton(renderItem(title, listItems), btnAttrs);
 };
 
 export const renderBtnList = (parent, btns = []) => {

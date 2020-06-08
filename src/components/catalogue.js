@@ -1,7 +1,7 @@
 import router from '../router';
-import { renderItem } from '../helpers/render';
+import { renderItemWithReadMore } from '../helpers/render';
 import { subscribe, publish } from '../services/observer';
-import { RENDER_ITEMS, SYNC_ITEMS, DESTROY_CURRENT_VIEW } from '../constants';
+import { RENDER_ITEMS, SYNC_ITEMS, DESTROY_PREV_VIEW } from '../constants';
 
 export default class Catalogue {
   constructor(people) {
@@ -23,7 +23,7 @@ export default class Catalogue {
 
     people.forEach((person) => {
       const details = this.mapListItems(person);
-      const item = renderItem(person.name, details, { detail: person.id });
+      const item = renderItemWithReadMore(person.name, details, { detail: person.id });
       fragment.appendChild(item);
     });
 
@@ -50,6 +50,10 @@ export default class Catalogue {
     this.wrapper.removeEventListener('click', this.navigateToDetail);
   }
 
+  showLoading = () => {
+    this.wrapper.innerHTML = 'Loading...';
+  }
+
   destroy = () => {
     this.removeNavigateListener();
     this.renderSubs.unsubscribe();
@@ -59,8 +63,9 @@ export default class Catalogue {
   init = () => {
     // re-render items on updates
     this.renderSubs = subscribe(RENDER_ITEMS, this.renderPeople);
-    this.destroySubs = subscribe(DESTROY_CURRENT_VIEW, this.destroy);
+    this.destroySubs = subscribe(DESTROY_PREV_VIEW, this.destroy);
 
+    this.showLoading();
     this.addNavigateListener();
 
     // sync items with other modules

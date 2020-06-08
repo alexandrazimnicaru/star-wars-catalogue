@@ -1,5 +1,5 @@
 import { publish, subscribe } from '../services/observer';
-import { RENDER_ITEMS, SYNC_ITEMS, DESTROY_CURRENT_VIEW, VIEWS } from '../constants';
+import { RENDER_ITEMS, SYNC_ITEMS, DESTROY_PREV_VIEW, VIEWS } from '../constants';
 
 const sortArrAscByProp = (arr, propName) => {
   if (!arr || !arr.length) {
@@ -100,8 +100,8 @@ export default class Sort {
 
   // since the sort wrapper is not dynamic it's more efficient
   // to show/hide it than re-create / re-attach listeners / re-attach subscriptions
-  toggleVisibility = (prevView) => {
-    if (prevView === VIEWS.OVERVIEW) {
+  toggleVisibility = (currentView) => {
+    if (currentView !== VIEWS.OVERVIEW) {
       this.wrapper.classList.add('is-hidden');
     } else {
       this.wrapper.classList.remove('is-hidden');
@@ -111,7 +111,7 @@ export default class Sort {
   init = () => {
     // re-sort items on sync
     subscribe(SYNC_ITEMS, this.syncItems);
-    subscribe(DESTROY_CURRENT_VIEW, this.toggleVisibility);
+    subscribe(DESTROY_PREV_VIEW, this.toggleVisibility);
 
     this.addSortListeners();
 

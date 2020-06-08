@@ -2,7 +2,7 @@ import router from '../router';
 import { renderItem, renderRelatedItems } from '../helpers/render';
 import { getPersonById } from '../services/api';
 import { subscribe } from '../services/observer';
-import { DESTROY_CURRENT_VIEW } from '../constants';
+import { DESTROY_PREV_VIEW } from '../constants';
 
 export default class Detail {
   constructor() {
@@ -34,11 +34,9 @@ export default class Detail {
     }
 
     let fragment = document.createDocumentFragment();
-
     const details = this.mapListItems(person);
     const item = renderItem(person.name, details);
     fragment.appendChild(item);
-
     fragment = this.renderOtherResidents(fragment, person.residents);
 
     this.wrapper.innerHTML = '';
@@ -64,12 +62,18 @@ export default class Detail {
     this.wrapper.removeEventListener('click', this.navigateToDetail);
   }
 
+  showLoading = () => {
+    this.wrapper.innerHTML = 'Loading...';
+  }
+
   destroy = () => {
     this.removeNavigateListener();
   }
 
   async init(id) {
-    this.destroySubs = subscribe(DESTROY_CURRENT_VIEW, this.destroy);
+    this.destroySubs = subscribe(DESTROY_PREV_VIEW, this.destroy);
+    this.showLoading();
+
     this.person = await getPersonById(id);
     this.renderPerson();
   }

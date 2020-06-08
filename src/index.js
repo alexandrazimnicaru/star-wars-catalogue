@@ -9,7 +9,7 @@ import Search from './components/search';
 import Sort from './components/sort';
 import { initializeErrorHandling, removeError } from './services/error-handling';
 import { publish } from './services/observer';
-import { SORT_PROP, DESTROY_CURRENT_VIEW, VIEWS } from './constants';
+import { SORT_PROP, DESTROY_PREV_VIEW, VIEWS } from './constants';
 
 // since the sort/search wrappers are not dynamic it's more efficient
 // to show/hide them than re-create / re-attach listeners / re-attach subscriptions
@@ -29,8 +29,8 @@ router
     const detail = new Detail();
     detail.init(params.id);
   }, {
-    leave: function () {
-      publish(DESTROY_CURRENT_VIEW, VIEWS.DETAIL)
+    after: function () {
+      publish(DESTROY_PREV_VIEW, VIEWS.DETAIL);
     }
   }) 
   .on('', function () {
@@ -40,9 +40,8 @@ router
     const overview = new Overview();
     overview.init();
   }, {
-    leave: function () {
-
-      publish(DESTROY_CURRENT_VIEW, VIEWS.OVERVIEW)
+    after: function () {
+      publish(DESTROY_PREV_VIEW, VIEWS.OVERVIEW);
     }
   })
   .resolve();
