@@ -1,0 +1,40 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Wars Catalogue Overview</title>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+
+  <body>
+    <article>
+      <header>
+        <h1><a href="/" data-navigo>Star Wars Catalogue</a></h1>
+
+        <section id="root-banner" class="is-hidden">
+          <header id="banner-error"></header>
+          <button id="close-banner-btn">x</button>
+        </section>
+
+        <section id="root-search">
+          <label for="search-input">Search</label>
+          <input id="search-input" name="search" type="text" />
+        </section>
+      </header>
+
+      <main>
+        <section>
+          <header>
+            <button id="sort-btn">Sort by name</button>
+          </header>
+
+          <ul id="root-overview"></ul>
+
+          <footer id="root-navigation"></footer>
+        </section>
+      </main>
+    </article>
+    
+    <script src="./index.js"></script>
+  </body>
+</html>

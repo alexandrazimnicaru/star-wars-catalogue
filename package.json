@@ -1,0 +1,29 @@
+{
+  "name": "starwars-catalogue",
+  "version": "1.0.0",
+  "description": "A Star Wars catalogue where you can search for people, and see their extra information",
+  "main": "src/index.js",
+  "author": "Alexandra Zimnicaru",
+  "license": "MIT",
+  "dependencies": {
+    "navigo": "^7.1.2",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.2.0",
+    "eslint-plugin-import": "^2.20.2",
+    "parcel-bundler": "^1.12.4",
+    "regenerator-runtime": "^0.13.5"
+  },
+  "scripts": {
+    "clear-build-cache": "rm -rf .cache/ dist/",
+    "start": "parcel src/index.html",
+    "prebuild": "rm -rf dist",
+    "build": "parcel build src/index.html --public-url .",
+    "lint": "eslint \"src/**/*.js\" --quiet",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
