@@ -1,0 +1,43 @@
+.item {
+  @extend .box-shadow-card;
+
+  padding: 20px;
+  margin-bottom: 15px;
+  background: white;
+  border-radius: 2px;
+
+  &__list li {
+    padding-left: 25px;
+    background-repeat: no-repeat;
+    background-position: 2px;
+    background-size: 20px;
+  }
+
+  &__height {
+    background-image: url('../assets/height.png');
+    background-image: 
+      linear-gradient(transparent, transparent),
+      url('../assets/height.svg');
+  }
+
+  &__mass {
+    background-image: url('../assets/mass.png');
+    background-image: 
+      linear-gradient(transparent, transparent),
+      url('../assets/mass.svg');
+  }
+
+  &__birth-year {
+    background-image: url('../assets/birth_year.png');
+    background-image: 
+      linear-gradient(transparent, transparent),
+      url('../assets/birth_year.svg');  
+  }
+
+  &__planet {
+    background-image: url('../assets/planet.png');
+    background-image: 
+      linear-gradient(transparent, transparent),
+      url('../assets/planet.svg');
+  }
+}

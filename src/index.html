@@ -3,34 +3,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Star Wars Catalogue Overview</title>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./scss/style.scss">
   </head>
 
   <body>
     <article>
-      <header>
-        <h1><a href="/" data-navigo>Star Wars Catalogue</a></h1>
-
-        <section id="root-banner" class="is-hidden">
-          <header id="banner-error"></header>
-          <button id="close-banner-btn">x</button>
-        </section>
-
-        <section id="root-search">
-          <label for="search-input">Search</label>
-          <input id="search-input" name="search" type="text" />
-        </section>
+      <header class="app-bar container">
+        <h1 class="app-bar__title">
+          <a href="/" data-navigo>
+            <img src="./assets/logo.png" alt="Star Wars Catalogue" height="56" class="app-bar__img">
+          </a>
+        </h1>
       </header>
 
-      <main>
-        <section>
-          <header>
-            <button id="sort-btn">Sort by name</button>
+      <main class="main">
+        <section id="root-banner" class="banner container is-hidden">
+          <header class="banner__header">
+            <h5 id="banner-error" class="banner__error"></h5>
+            
+            <button id="close-banner-btn" class="banner__close-btn button ">
+              <svg width="36" height="36">
+                <image xlink:href="./assets/close.svg" src="./assets/close.png" width="36" height="36" alt="Close banner" />
+              </svg>
+            </button>
+          </header>
+        </section>
+
+        <section id="root-search" class="search">
+          <div class="search__fieldset">
+            <input
+              id="search-input"
+              class="search__input"
+              name="search"
+              type="text"
+              aria-label="Search"
+              placeholder="Who are you looking for?"
+              autocomplete="off"
+            />
+          </div>
+        </section>
+
+        <section class="container">
+          <header id="sort" class="sort">
+            <h5 class="sort__title">Sort by</h5>
+
+            <button
+              data-sort="name"
+              class="sort__button button "
+            >
+              name
+            </button>
           </header>
 
-          <ul id="root-overview"></ul>
+          <section id="root-view"></section>
 
-          <footer id="root-navigation"></footer>
+          <footer id="root-navigation" class="navigation"></footer>
         </section>
       </main>
     </article>

@@ -1,0 +1,13 @@
+.grid {
+  display: grid;
+  column-gap: 10px;
+  grid-column-gap: 10px;
+
+  @media screen and (min-width: $small-up-breakpoint) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media screen and (min-width: $medium-up-breakpoint) {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
+}

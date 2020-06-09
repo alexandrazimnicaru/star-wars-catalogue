@@ -1,0 +1,24 @@
+.button {
+  background: transparent;
+  color: inherit;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+
+  &--raised {
+    @extend .box-shadow-button;
+
+    padding: 8px 12px;
+    background-color: $accent;
+    border: 0;
+    border-radius: 3px;
+    font-size: 13px;
+    text-transform: uppercase;
+    transition: background-color 250ms;
+
+    &:hover,
+    &:visited {
+      background-color: $accent-hover;
+    }
+  }
+}

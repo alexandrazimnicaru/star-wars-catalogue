@@ -6,7 +6,7 @@ import { RENDER_ITEMS, SYNC_ITEMS, DESTROY_PREV_VIEW } from '../constants';
 export default class Catalogue {
   constructor(people) {
     this.people = people;
-    this.wrapper = document.getElementById('root-overview');
+    this.wrapper = document.getElementById('root-view');
     this.renderSubs = null;
     this.destroySubs = null;
   }
@@ -21,11 +21,14 @@ export default class Catalogue {
     const people = updatedPeople || this.people;
     const fragment = document.createDocumentFragment();
 
+    const ul = document.createElement('ul');
+    ul.classList.add('grid');
     people.forEach((person) => {
       const details = this.mapListItems(person);
-      const item = renderItemWithReadMore(person.name, details, { detail: person.id });
-      fragment.appendChild(item);
+      const item = renderItemWithReadMore(person.name, details, { detail: person.id }, 'button--raised');
+      ul.appendChild(item);
     });
+    fragment.appendChild(ul);
 
     this.wrapper.innerHTML = '';
     this.wrapper.appendChild(fragment);

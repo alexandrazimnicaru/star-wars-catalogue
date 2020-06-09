@@ -4,10 +4,16 @@ const renderTitle = (parent, title) => {
   }
 
   const header = document.createElement('header'); 
-  header.textContent = title;
+  const h4 = document.createElement('h4');
+  h4.textContent = title;
+  header.appendChild(h4);
   parent.appendChild(header);
   return parent;
 };
+
+const getClassNameByKey = (str) => (
+  str.toLowerCase().trim().split(/\s+/).join('-')
+);
 
 const renderList = (parent, listMap) => {
   if (!listMap) {
@@ -20,8 +26,10 @@ const renderList = (parent, listMap) => {
   }
 
   const ul = document.createElement('ul');
+  ul.classList.add('item__list');
   listKeys.forEach((key) => {
     const li = document.createElement('li');
+    li.classList.add(`item__${getClassNameByKey(key)}`);
     li.textContent = `${key}: ${listMap[key]}`;
     ul.appendChild(li);
   });
@@ -29,9 +37,16 @@ const renderList = (parent, listMap) => {
   return parent;
 };
 
-const renderButton = (parent, dataAttrs = {}, title = 'Read more') => {
+const renderButton = (parent, dataAttrs = {}, title = 'Read more', customClass='') => {
   const btn = document.createElement('button');
   const btnText = document.createTextNode(title);
+
+  if (customClass) {
+    btn.classList.add('button',  customClass);
+  } else {
+    btn.classList.add('button');
+  }
+
   btn.appendChild(btnText);
 
   if (typeof dataAttrs === 'object' && dataAttrs !== null) {
@@ -45,12 +60,13 @@ const renderButton = (parent, dataAttrs = {}, title = 'Read more') => {
 };
 
 export const renderItem = (title, listItems) => {
-  const li = document.createElement('li');
-  return renderList(renderTitle(li, title), listItems);
+  const section = document.createElement('section');
+  section.classList.add('item');
+  return renderList(renderTitle(section, title), listItems);
 };
 
-export const renderItemWithReadMore = (title, listItems, btnAttrs = {}) => {
-  return renderButton(renderItem(title, listItems), btnAttrs);
+export const renderItemWithReadMore = (title, listItems, btnAttrs = {}, customClass='') => {
+  return renderButton(renderItem(title, listItems), btnAttrs, 'Read More', customClass);
 };
 
 export const renderBtnList = (parent, btns = []) => {

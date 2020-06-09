@@ -1,0 +1,21 @@
+.banner {
+  @extend .box-shadow-block;
+
+  background: $error;
+  color: white;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__error {
+    display: inline-block;
+  }
+
+  &__close-btn {
+    height: 30px;
+    float: right;
+  }
+}

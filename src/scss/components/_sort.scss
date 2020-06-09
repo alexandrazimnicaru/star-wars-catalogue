@@ -1,0 +1,18 @@
+.sort {
+  padding: 10px 15px;
+  background: $accent;
+
+  &__title {
+    display: inline;
+  }
+
+  &__button {
+    &:after {
+      content: ' ↓';
+    }
+
+    &.is-sorted-desc:after {
+      content: ' ↑';
+    }
+  }
+}

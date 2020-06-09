@@ -7,7 +7,7 @@ import { DESTROY_PREV_VIEW } from '../constants';
 export default class Detail {
   constructor() {
     this.person = null;
-    this.wrapper = document.getElementById('root-overview');
+    this.wrapper = document.getElementById('root-view');
     this.destroySubs = null;
   }
 
@@ -35,9 +35,9 @@ export default class Detail {
 
     let fragment = document.createDocumentFragment();
     const details = this.mapListItems(person);
-    const item = renderItem(person.name, details);
+    let item = renderItem(person.name, details);
+    item = this.renderOtherResidents(item, person.residents);
     fragment.appendChild(item);
-    fragment = this.renderOtherResidents(fragment, person.residents);
 
     this.wrapper.innerHTML = '';
     this.wrapper.appendChild(fragment);

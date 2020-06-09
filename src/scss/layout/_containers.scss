@@ -1,0 +1,15 @@
+.main {
+  padding-top: $app-bar-small;
+
+  @media screen and (min-width: $small-up-breakpoint) {
+    padding-top: $app-bar-medium;
+  }
+}
+
+.container {
+  padding: 0 15px;
+
+  @media screen and (min-width: $small-up-breakpoint) {
+    padding: 0 20px;
+  }
+}

@@ -1,0 +1,24 @@
+.app-bar {
+  @extend .box-shadow-block;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $app-bar-small;
+  background: $primary;
+  color: white;
+  z-index: $z-index-app-bar;
+
+  @media screen and (min-width: $small-up-breakpoint) {
+    height: $app-bar-medium;
+  }
+
+  &__title {
+    margin: 0;
+
+    @media screen and (min-width: $small-up-breakpoint) {
+      padding: 5px 0;
+    }
+  }
+}

@@ -63,7 +63,8 @@ export default class Sort {
     // use 1 (ascending) & -1 (descending) for sort direction
     // to toggle it easily with the default asc
     this.direction = 1;
-    this.wrapper = document.getElementById('sort-btn');
+    this.wrapper = document.getElementById('sort');
+    this.btn = document.querySelector(`button[data-sort="${this.propName}"]`);
   }
 
   sort = () => {
@@ -75,6 +76,7 @@ export default class Sort {
       publish(RENDER_ITEMS, sortArrAscByProp(this.items, this.propName));
     } else {
       publish(RENDER_ITEMS, sortDescAscByProp(this.items, this.propName));
+      this.btn.classList.add('is-sorted-desc');
     }
   }
 
@@ -84,13 +86,14 @@ export default class Sort {
     }
 
     this.direction = -this.direction;
+    this.btn.classList.toggle('is-sorted-desc');
 
     // simply reverse the arr since it's already sorted
     publish(RENDER_ITEMS, reverseArrSorting(this.items));
   }
   
   addSortListeners = () => {
-    this.wrapper.addEventListener('click', this.toggleSort);
+    this.btn.addEventListener('click', this.toggleSort);
   }
 
   syncItems = (items) => {
