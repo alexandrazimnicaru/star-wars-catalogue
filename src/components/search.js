@@ -1,6 +1,6 @@
 import { searchPeopleWithCount } from '../services/api';
-import { publish, subscribe } from '../services/observer';
-import { SYNC_ITEMS, RENDER_ITEMS, RESET_PAGES, DESTROY_PREV_VIEW, VIEWS } from '../constants';
+import { publish } from '../services/observer';
+import { SYNC_ITEMS, RENDER_ITEMS, RESET_PAGES } from '../constants';
 
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for
@@ -26,6 +26,8 @@ export default class Search {
   constructor() {
     this.searchInput = document.getElementById('search-input');
     this.wrapper = document.getElementById('root-search');
+
+    this.init();
   }
 
   search = async () => {
@@ -37,20 +39,15 @@ export default class Search {
 
   // since the search wrapper is not dynamic it's more efficient
   // to show/hide it than re-create / re-attach listeners / re-attach subscriptions
-  toggleVisibility = (currentView) => {
-    if (currentView !== VIEWS.OVERVIEW) {
-      this.wrapper.classList.add('is-hidden');
-    } else {
-      this.wrapper.classList.remove('is-hidden');
+  show = () => {
+    this.wrapper.classList.remove('is-hidden');
+  }
 
-      // clear previous searches
-      this.searchInput.value = '';
-    }
+  hide = () => {
+    this.wrapper.classList.add('is-hidden');
   }
 
   init = () => {
-    subscribe(DESTROY_PREV_VIEW, this.toggleVisibility);
-
     const searchListener = debounce(() => {
       this.search();
     }, 250);

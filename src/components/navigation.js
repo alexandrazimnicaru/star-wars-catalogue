@@ -1,15 +1,15 @@
 import router from '../router';
 import { renderBtnList } from '../helpers/render';
 import { subscribe } from '../services/observer';
-import { RESET_PAGES, DESTROY_PREV_VIEW, RESULTS_PER_PAGE, VIEWS } from '../constants';
+import { RESET_PAGES, RESULTS_PER_PAGE } from '../constants';
 
 export default class Navigation {
   constructor(count, current) {
     this.wrapper = document.getElementById('root-navigation');
     this.total = (!count || isNaN(count)) ? 0 : Math.ceil(count / RESULTS_PER_PAGE);
     this.current = this.getCurrent(current);
-    this.resetPagesSubs = null;
-    this.destroySubs = null;
+
+    this.init();
   }
 
   getCurrent = (current) => {
@@ -72,19 +72,15 @@ export default class Navigation {
     this.wrapper.removeEventListener('click', this.navigateToPage);
   }
 
-  destroy = (currentView) => {
-    if (currentView !== VIEWS.OVERVIEW) {
-      this.wrapper.innerHTML = '';
-    }
+  destroy = () => {
+    this.wrapper.innerHTML = '';
     this.removeNavigateListener();
     this.resetPagesSubs.unsubscribe();
-    this.destroySubs.unsubscribe();
   }
 
   init = () => {
     // re-render pages on search
     this.resetPagesSubs = subscribe(RESET_PAGES,  this.renderOnReset);
-    this.destroySubs = subscribe(DESTROY_PREV_VIEW, this.destroy);
 
     this.renderPageLinks();
     this.addNavigateListener();

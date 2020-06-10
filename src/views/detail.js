@@ -1,14 +1,12 @@
 import router from '../router';
 import { renderItem, renderRelatedItems } from '../helpers/render';
 import { getPersonById } from '../services/api';
-import { subscribe } from '../services/observer';
-import { DESTROY_PREV_VIEW } from '../constants';
 
 export default class Detail {
-  constructor() {
-    this.person = null;
+  constructor(id) {
     this.wrapper = document.getElementById('root-view');
-    this.destroySubs = null;
+
+    this.init(id);
   }
 
   mapListItems = ({ height, mass, birthYear, planet }) => ({
@@ -71,8 +69,8 @@ export default class Detail {
   }
 
   async init(id) {
-    this.destroySubs = subscribe(DESTROY_PREV_VIEW, this.destroy);
     this.showLoading();
+    this.addNavigateListener();
 
     this.person = await getPersonById(id);
     this.renderPerson();

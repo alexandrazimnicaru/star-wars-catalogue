@@ -1,14 +1,14 @@
 import router from '../router';
 import { renderItemWithReadMore } from '../helpers/render';
 import { subscribe, publish } from '../services/observer';
-import { RENDER_ITEMS, SYNC_ITEMS, DESTROY_PREV_VIEW } from '../constants';
+import { RENDER_ITEMS, SYNC_ITEMS } from '../constants';
 
 export default class Catalogue {
   constructor(people) {
     this.people = people;
     this.wrapper = document.getElementById('root-view');
-    this.renderSubs = null;
-    this.destroySubs = null;
+
+    this.init();
   }
 
   mapListItems = ({ height, mass, birthYear }) => ({
@@ -60,13 +60,11 @@ export default class Catalogue {
   destroy = () => {
     this.removeNavigateListener();
     this.renderSubs.unsubscribe();
-    this.destroySubs.unsubscribe();
   }
 
   init = () => {
     // re-render items on updates
     this.renderSubs = subscribe(RENDER_ITEMS, this.renderPeople);
-    this.destroySubs = subscribe(DESTROY_PREV_VIEW, this.destroy);
 
     this.showLoading();
     this.addNavigateListener();
