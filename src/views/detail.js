@@ -10,10 +10,10 @@ export default class Detail {
   }
 
   mapListItems = ({ height, mass, birthYear, planet }) => ({
-    'Height': height || 'n/a',
-    'Mass': mass || 'n/a',
-    'Birth Year': birthYear || 'n/a',
-    'Planet': planet || 'n/a'
+    'Height': height || 'unkown',
+    'Mass': mass || 'unkown',
+    'Birth Year': birthYear && birthYear !== 'unkown' ? `${birthYear}BBY` :  'unkown',
+    'Planet': planet || 'unkown'
   })
 
   renderOtherResidents = (fragment, residents) => {

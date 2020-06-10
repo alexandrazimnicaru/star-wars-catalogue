@@ -12,9 +12,9 @@ export default class Catalogue {
   }
 
   mapListItems = ({ height, mass, birthYear }) => ({
-    'Height': height || 'n/a',
-    'Mass': mass || 'n/a',
-    'Birth Year': birthYear || 'n/a'
+    'Height': height || 'unkown',
+    'Mass': mass || 'unkown',
+    'Birth Year': birthYear && birthYear !== 'unkown' ? `${birthYear}BBY` :  'unkown'
   })
 
   renderPeople = (updatedPeople = this.people) => {

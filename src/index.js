@@ -7,24 +7,21 @@ import Overview from './views/overview';
 import Detail from './views/detail';
 import Search from './components/search';
 import Sort from './components/sort';
-import { initializeErrorHandling, removeError } from './services/error-handling';
-import { SORT_PROP } from './constants';
+import ErrorHandler from './components/error-handler';
 
-initializeErrorHandling();
-
+const errorHandler = new ErrorHandler();
 const search = new Search();
-const sort = new Sort(SORT_PROP);
+const sort = new Sort();
 let overview;
 let detail;
 router
   .on('detail/:id', function (params) {
-    // remove pre-existing errors
-    removeError();
-
     detail = new Detail(params.id);
   }, {
     leave: function () {
       detail.destroy();
+  
+      errorHandler.removeError(); // remove existing errors
     }
   }) 
   .on('', function () {
@@ -33,13 +30,12 @@ router
     search.show();
     sort.show();
 
-    // remove pre-existing errors
-    removeError();
-
     overview = new Overview();
   }, {
     leave: function () {
       overview.destroy();
+
+      errorHandler.removeError(); // remove existing errors
 
       search.hide();
       sort.hide();

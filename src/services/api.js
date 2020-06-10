@@ -1,6 +1,7 @@
 import 'whatwg-fetch';
 import { parsePerson, parsePersonForDetail, parseResident } from '../helpers/parser';
-import { addError } from './error-handling';
+import { publish } from './observer';
+import { SHOW_ERROR } from '../constants';
 
 const BASE_URL = 'https://swapi.dev/api';
 const GET_PEOPLE_ERROR = 'An error occured while looking for you favourite Star Wars characters, please try again or contact us';
@@ -23,7 +24,7 @@ const getPeople = async (apiResponse) => {
 
     return { people: results.map(person => parsePerson(person)), count: jsonResponse.count };
   } catch(err) {
-    addError(GET_PLANET_ERROR);
+    publish(SHOW_ERROR, GET_PLANET_ERROR);
     return { people: [], count: 0 };
   }
 }
@@ -34,7 +35,7 @@ export const getPeopleWithCount = async (page = 1) => {
     const people = await getPeople(response);
     return people;
   } catch(err) {
-    addError(GET_PEOPLE_ERROR);
+    publish(SHOW_ERROR, GET_PEOPLE_ERROR);
     return { people: [], count: 0 };
   }
 };
@@ -45,7 +46,7 @@ export const searchPeopleWithCount = async (search = '') => {
     const people = await getPeople(response);
     return people;
   } catch(err) {
-    addError(GET_PEOPLE_ERROR);
+    publish(SHOW_ERROR, GET_PEOPLE_ERROR);
     return { people: [], count: 0 };
   }
 };
@@ -71,7 +72,7 @@ export const getPlanetResidents = async (urls, currentPersonUrl) => {
       residents.push(parseResident(jsonResponse));
     }
   } catch(err) {
-    addError(GET_RESIDENTS_ERROR);
+    publish(SHOW_ERROR, GET_RESIDENTS_ERROR);
     return [];
   }
   return residents;
@@ -92,7 +93,7 @@ const getPlanetForPerson = async ({ homeworld, url }) => {
     const residents = await getPlanetResidents(jsonResponse.residents, url);
     return { planet: jsonResponse.name || '', residents };
   } catch(err) {
-    addError(GET_PLANET_ERROR);
+    publish(SHOW_ERROR, GET_PLANET_ERROR);
     return null;
   }
 };
@@ -113,7 +114,7 @@ export const getPersonById = async (id) => {
     
     return parsePersonForDetail(jsonResponse, planet);
   } catch(err) {
-    addError(GET_PERSON_ERROR);
+    publish(SHOW_ERROR, GET_PERSON_ERROR);
     return null;
   }
 };

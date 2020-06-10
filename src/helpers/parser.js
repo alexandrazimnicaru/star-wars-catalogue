@@ -21,9 +21,9 @@ export const parsePerson = (apiResponse) => {
   return {
     id: parseId(apiResponse.url),
     name: apiResponse.name || '',
-    height: apiResponse.height || '',
-    mass: apiResponse.mass || '',
-    birthYear: apiResponse.birth_year || ''
+    height: apiResponse.height ? parseInt(apiResponse.height, 10) : null,
+    mass: apiResponse.mass ? parseInt(apiResponse.mass, 10) : null,
+    birthYear: apiResponse.birth_year && apiResponse.birth_year !== 'unkown' ? parseFloat(apiResponse.birth_year) : 'unkown'
   };
 };
 

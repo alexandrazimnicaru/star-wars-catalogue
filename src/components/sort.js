@@ -1,5 +1,8 @@
 import { publish, subscribe } from '../services/observer';
-import { RENDER_ITEMS, SYNC_ITEMS } from '../constants';
+import { RENDER_ITEMS, SYNC_ITEMS, DEFAULT_SORT_PROP } from '../constants';
+
+const CSS_CLASS_ASC = 'is-sorted-asc';
+const CSS_CLASS_DESC = 'is-sorted-desc';
 
 const sortArrAscByProp = (arr, propName) => {
   if (!arr || !arr.length) {
@@ -56,46 +59,84 @@ const reverseArrSorting = (arr) => {
 };
 
 export default class Sort {
-  constructor(propName) {
+  constructor() {
     this.items = [];
-    this.propName = propName;
-    this.isSorted = false;
+    this.currentSortProp = DEFAULT_SORT_PROP;
     // use 1 (ascending) & -1 (descending) for sort direction
     // to toggle it easily with the default asc
     this.direction = 1;
     this.wrapper = document.getElementById('sort');
-    this.btn = document.querySelector(`button[data-sort="${this.propName}"]`);
 
     this.init();
   }
 
-  sort = () => {
+  toggleClassNameByDirection = (buttonEl) => {
+    const btn = buttonEl || document.querySelector(`button[data-sort=${this.currentSortProp}`);
+    if (!btn) {
+      return;
+    }
+
+    btn.classList.toggle(CSS_CLASS_ASC);
+    btn.classList.toggle(CSS_CLASS_DESC);
+  }
+
+  addClassNameByDirection = (buttonEl) => {
+    const btn = buttonEl || document.querySelector(`button[data-sort=${this.currentSortProp}`);
+    if (!btn) {
+      return;
+    }
+
+    const classByDirection = this.direction === 1 ? CSS_CLASS_ASC : CSS_CLASS_DESC;
+    const prevSortBtn = document.querySelector(`.${CSS_CLASS_ASC}`) || document.querySelector(`.${CSS_CLASS_DESC}`);
+    if (prevSortBtn) {
+      prevSortBtn.classList.remove(CSS_CLASS_ASC, CSS_CLASS_DESC);
+    }
+    btn.classList.add(classByDirection);
+  }
+
+  sort = (btnEl) => {
     if (!this.items) {
       return;
     }
 
+    this.addClassNameByDirection(btnEl);
+
     if (this.direction === 1) {
-      publish(RENDER_ITEMS, sortArrAscByProp(this.items, this.propName));
+      publish(RENDER_ITEMS, sortArrAscByProp(this.items, this.currentSortProp));
     } else {
-      publish(RENDER_ITEMS, sortDescAscByProp(this.items, this.propName));
-      this.btn.classList.add('is-sorted-desc');
+      publish(RENDER_ITEMS, sortDescAscByProp(this.items, this.currentSortProp));
     }
   }
 
-  toggleSort = () => {
+  toggleSort = (btnEl) => {
     if (!this.items) {
       return;
     }
 
-    this.direction = -this.direction;
-    this.btn.classList.toggle('is-sorted-desc');
+    this.toggleClassNameByDirection(btnEl);
 
+    this.direction = -this.direction;
     // simply reverse the arr since it's already sorted
     publish(RENDER_ITEMS, reverseArrSorting(this.items));
   }
   
   addSortListeners = () => {
-    this.btn.addEventListener('click', this.toggleSort);
+    this.wrapper.addEventListener('click', (e) => {
+      if (e.target.matches('button')) {
+        const sortProp = e.target.getAttribute('data-sort');
+        if (!sortProp) {
+          return;
+        }
+
+        if (sortProp === this.currentSortProp) {
+          this.toggleSort(e.target);
+        } else {
+          this.currentSortProp = sortProp;
+          this.direction = 1;
+          this.sort(e.target);
+        }
+      }
+    });
   }
 
   syncItems = (items) => {
@@ -120,6 +161,6 @@ export default class Sort {
     this.addSortListeners();
 
     // by default sort asc
-    publish(RENDER_ITEMS, sortArrAscByProp(this.items, this.propName));
+    publish(RENDER_ITEMS, sortArrAscByProp(this.items, this.currentSortProp));
   }
 } 

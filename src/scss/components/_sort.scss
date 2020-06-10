@@ -1,13 +1,18 @@
 .sort {
   padding: 10px 15px;
+  display: flex;
+  justify-content: space-evenly;
   background: $accent;
 
-  &__title {
-    display: inline;
-  }
-
   &__button {
-    &:after {
+    padding: 0;
+
+    &.is-sorted-asc,
+    &.is-sorted-desc {
+      font-weight: bold;
+    }
+
+    &.is-sorted-asc:after {
       content: ' ↓';
     }
 
