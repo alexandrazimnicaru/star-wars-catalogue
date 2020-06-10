@@ -37,7 +37,7 @@ export default class Detail {
     let fragment = document.createDocumentFragment();
     let item = renderItem(this.person.name, details);
     item = this.renderOtherResidents(item, this.person.residents);
-    item = renderButton(item, { back: true }, '← Back to overview', 'is-bold')
+    item = renderButton(item, { back: true }, '← Back', 'is-bold')
     fragment.appendChild(item);
 
     this.wrapper.innerHTML = '';
@@ -78,10 +78,6 @@ export default class Detail {
     this.wrapper.removeEventListener('click', this.goBack);
   }
 
-  showLoading = () => {
-    this.wrapper.innerHTML = 'Loading...';
-  }
-
   destroy = () => {
     this.removeNavigateListener();
     // avoid render after req finished on slow networks
@@ -89,7 +85,6 @@ export default class Detail {
   }
 
   async init(id) {
-    this.showLoading();
     this.addNavigateListener();
 
     this.person = await getPersonById(id);

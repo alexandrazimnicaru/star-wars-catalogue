@@ -8,8 +8,10 @@ import Detail from './views/detail';
 import Search from './components/search';
 import Sort from './components/sort';
 import ErrorHandler from './components/error-handler';
+import Loader from './components/loader';
 
 const errorHandler = new ErrorHandler();
+const loader = new Loader();
 const search = new Search();
 const sort = new Sort();
 let overview;
@@ -26,6 +28,7 @@ router
     leave: function () {
       detail.destroy();
   
+      loader.showLoading();
       errorHandler.removeError(); // remove existing errors
     }
   }) 
@@ -40,6 +43,7 @@ router
     leave: function () {
       overview.destroy();
 
+      loader.showLoading();
       errorHandler.removeError(); // remove existing errors
     }
   })
