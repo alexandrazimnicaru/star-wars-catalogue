@@ -87,3 +87,10 @@ export const renderRelatedItems = (title, btns) => {
   let wrapper = document.createElement('section');
   return renderBtnList(renderTitle(wrapper, title), btns);
 };
+
+export const renderNoResults = () => {
+  const p = document.createElement('p');
+  const text = document.createTextNode('We couldn\'t find anyone');
+  p.appendChild(text);
+  return p;
+};

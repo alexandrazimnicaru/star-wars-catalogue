@@ -1,8 +1,11 @@
 .sort {
   padding: 10px 15px;
-  display: flex;
-  justify-content: space-evenly;
   background: $accent;
+
+  &__wrapper {
+    display: flex;
+    justify-content: space-evenly;
+  }
 
   &__button {
     padding: 0;

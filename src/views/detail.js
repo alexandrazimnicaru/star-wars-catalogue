@@ -1,10 +1,11 @@
 import router from '../router';
-import { renderItem, renderRelatedItems } from '../helpers/render';
+import { renderRelatedItems, renderItem } from '../helpers/render';
 import { getPersonById } from '../services/api';
 
 export default class Detail {
   constructor(id) {
     this.wrapper = document.getElementById('root-view');
+    this.renderWasCancelled = false;
 
     this.init(id);
   }
@@ -26,19 +27,31 @@ export default class Detail {
     return fragment;
   }
 
-  renderPerson = (person = this.person) => {
-    if (!this.person) {
+  renderPerson = () => {
+    if (!this.person || this.renderWasCancelled) {
       return;
     }
 
+    const details = this.mapListItems(this.person);
+
     let fragment = document.createDocumentFragment();
-    const details = this.mapListItems(person);
-    let item = renderItem(person.name, details);
-    item = this.renderOtherResidents(item, person.residents);
+    let item = renderItem(this.person.name, details);
+    item = this.renderOtherResidents(item, this.person.residents);
     fragment.appendChild(item);
 
     this.wrapper.innerHTML = '';
     this.wrapper.appendChild(fragment);
+  }
+
+  goBack = (e) => {
+    if (e.target.matches('button')) {
+      const hasBackAttr = e.target.getAttribute('data-back');
+      if (!hasBackAttr) {
+        return;
+      }
+
+      router.off(router.lastRouteResolved())
+    }
   }
 
   navigateToDetail = (e) => {
@@ -54,10 +67,12 @@ export default class Detail {
 
   addNavigateListener = () => {
     this.wrapper.addEventListener('click', this.navigateToDetail);
+    this.wrapper.addEventListener('click', this.goBack);
   }
 
   removeNavigateListener = () => {
     this.wrapper.removeEventListener('click', this.navigateToDetail);
+    this.wrapper.removeEventListener('click', this.goBack);
   }
 
   showLoading = () => {
@@ -66,6 +81,8 @@ export default class Detail {
 
   destroy = () => {
     this.removeNavigateListener();
+    // avoid render after req finished on slow networks
+    this.renderWasCancelled = true;
   }
 
   async init(id) {

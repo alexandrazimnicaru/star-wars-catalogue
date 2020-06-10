@@ -1,30 +1,45 @@
 import Catalogue from '../components/catalogue';
 import Navigation from '../components/navigation';
-import { getPeopleWithCount } from '../services/api';
+import { getPeopleWithCount, searchPeopleWithCount } from '../services/api';
 
 export default class Overview {
   constructor() {
+    this.renderWasCancelled = false;
+
     this.init();
   }
 
-  getCurrentPage = () => {
+  getQueryParams = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('page') || '1';
+    return {
+      page: urlParams.get('page') || '1',
+      searchKeyWord: urlParams.get('search') || ''
+    };
+  }
+
+  getPeople = (searchKeyWord, page) => {
+    if (searchKeyWord) {
+      return searchPeopleWithCount(searchKeyWord, page);
+    }
+
+    return getPeopleWithCount(page);
   }
 
   destroy = () => {
     this.catalogue.destroy();
     this.navigation.destroy();
+    // avoid render after req finished on slow networks
+    this.renderWasCancelled = true;
   }
 
   init = async () => {
-    const page = this.getCurrentPage();
-    const { people, count } = await getPeopleWithCount(page);
-    if (!people || !people.length) {
+    const { page, searchKeyWord } = this.getQueryParams();
+    const { people, count } = await this.getPeople(searchKeyWord, page);
+    if (!people) {
       return;
     }
 
-    this.navigation = new Navigation(count, page);
     this.catalogue = new Catalogue(people);
+    this.navigation = new Navigation(count, page, searchKeyWord);
   }
 } 

@@ -1,11 +1,11 @@
 import router from '../router';
-import { renderItemWithReadMore } from '../helpers/render';
+import { renderItemWithReadMore, renderNoResults } from '../helpers/render';
 import { subscribe, publish } from '../services/observer';
 import { RENDER_ITEMS, SYNC_ITEMS } from '../constants';
 
 export default class Catalogue {
   constructor(people) {
-    this.people = people;
+    this.people = people || [];
     this.wrapper = document.getElementById('root-view');
 
     this.init();
@@ -19,16 +19,24 @@ export default class Catalogue {
 
   renderPeople = (updatedPeople = this.people) => {
     const people = updatedPeople || this.people;
+    if (!people) {
+      return;
+    }
+
     const fragment = document.createDocumentFragment();
 
-    const ul = document.createElement('ul');
-    ul.classList.add('grid');
-    people.forEach((person) => {
-      const details = this.mapListItems(person);
-      const item = renderItemWithReadMore(person.name, details, { detail: person.id }, 'button--raised');
-      ul.appendChild(item);
-    });
-    fragment.appendChild(ul);
+    if (!people.length) {
+      fragment.appendChild(renderNoResults());
+    } else {
+      const ul = document.createElement('ul');
+      ul.classList.add('grid');
+      people.forEach((person) => {
+        const details = this.mapListItems(person);
+        const item = renderItemWithReadMore(person.name, details, { detail: person.id }, 'button--raised');
+        ul.appendChild(item);
+      });
+      fragment.appendChild(ul);
+    }
 
     this.wrapper.innerHTML = '';
     this.wrapper.appendChild(fragment);
@@ -53,20 +61,16 @@ export default class Catalogue {
     this.wrapper.removeEventListener('click', this.navigateToDetail);
   }
 
-  showLoading = () => {
-    this.wrapper.innerHTML = 'Loading...';
-  }
-
   destroy = () => {
     this.removeNavigateListener();
     this.renderSubs.unsubscribe();
+    this.people = null;
   }
 
   init = () => {
     // re-render items on updates
     this.renderSubs = subscribe(RENDER_ITEMS, this.renderPeople);
 
-    this.showLoading();
     this.addNavigateListener();
 
     // sync items with other modules

@@ -30,11 +30,17 @@ export default class Search {
     this.init();
   }
 
+  getSearchKeyWord = () => this.searchInput.value;
+
+  clearSearch = () => {
+    this.searchInput.value = '';
+  }
+
   search = async () => {
-    const { people, count } = await searchPeopleWithCount(this.searchInput.value); // ?
+    const { people } = await searchPeopleWithCount(this.searchInput.value);
     publish(SYNC_ITEMS, people);
     publish(RENDER_ITEMS, people);
-    publish(RESET_PAGES, count);
+    publish(RESET_PAGES, this.searchInput.value);
   }
 
   // since the search wrapper is not dynamic it's more efficient

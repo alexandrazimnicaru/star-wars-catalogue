@@ -4,15 +4,18 @@ import { subscribe } from '../services/observer';
 import { RESET_PAGES, RESULTS_PER_PAGE } from '../constants';
 
 export default class Navigation {
-  constructor(count, current) {
+  constructor(count, current, searchKeyWord = '') {
     this.wrapper = document.getElementById('root-navigation');
     this.total = (!count || isNaN(count)) ? 0 : Math.ceil(count / RESULTS_PER_PAGE);
-    this.current = this.getCurrent(current);
+    this.current = this.calculateCurrentPage(current);
+    this.searchKeyWord = searchKeyWord;
 
     this.init();
   }
 
-  getCurrent = (current) => {
+  getCurrentPage = () => this.current;
+
+  calculateCurrentPage = (current) => {
     const parsed = parseInt(current, 10);
 
     if (!parsed || isNaN(parsed)) {
@@ -47,10 +50,13 @@ export default class Navigation {
     this.wrapper.appendChild(renderBtnList(document.createElement('section'), this.getPageLinks()));
   }
 
-  renderOnReset = (count) => {
-    this.total = (!count || isNaN(count)) ? 0 : Math.ceil(count / RESULTS_PER_PAGE);
-    this.current = 1;
-    this.renderPageLinks();
+  renderOnReset = (searchKeyWord) => {
+    if (!searchKeyWord) {
+      router.navigate('');
+      return;
+    }
+
+    router.navigate(`?search=${searchKeyWord}&page=1`);
   }
 
   navigateToPage = (e) => {
@@ -60,7 +66,11 @@ export default class Navigation {
         return;
       }
 
-      router.navigate(`?page=${page}`);
+      if (this.searchKeyWord) {
+        router.navigate(`?search=${this.searchKeyWord}&page=${page}`);
+      } else {
+        router.navigate(`?page=${page}`);
+      }
     }
   }
 
