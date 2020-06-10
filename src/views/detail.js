@@ -1,5 +1,5 @@
 import router from '../router';
-import { renderRelatedItems, renderItem } from '../helpers/render';
+import { renderRelatedItems, renderItem, renderButton } from '../helpers/render';
 import { getPersonById } from '../services/api';
 
 export default class Detail {
@@ -37,6 +37,7 @@ export default class Detail {
     let fragment = document.createDocumentFragment();
     let item = renderItem(this.person.name, details);
     item = this.renderOtherResidents(item, this.person.residents);
+    item = renderButton(item, { back: true }, '← Back to overview', 'is-bold')
     fragment.appendChild(item);
 
     this.wrapper.innerHTML = '';
@@ -50,7 +51,9 @@ export default class Detail {
         return;
       }
 
-      router.off(router.lastRouteResolved())
+      if (window.history) {
+        window.history.back();
+      }
     }
   }
 

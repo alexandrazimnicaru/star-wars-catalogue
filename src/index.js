@@ -16,6 +16,11 @@ let overview;
 let detail;
 router
   .on('detail/:id', function (params) {
+    // since the sort/search wrappers are not dynamic it's more efficient
+    // to show/hide them than re-create / re-attach listeners / re-attach subscriptions
+    search.hide();
+    sort.hide();
+
     detail = new Detail(params.id);
   }, {
     leave: function () {
@@ -36,9 +41,6 @@ router
       overview.destroy();
 
       errorHandler.removeError(); // remove existing errors
-
-      search.hide();
-      sort.hide();
     }
   })
   .resolve();

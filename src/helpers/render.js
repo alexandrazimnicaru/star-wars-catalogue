@@ -37,7 +37,7 @@ const renderList = (parent, listMap) => {
   return parent;
 };
 
-const renderButton = (parent, dataAttrs = {}, title = 'Read more', customClass='') => {
+export const renderButton = (parent, dataAttrs = {}, title = 'Read more', customClass='') => {
   const btn = document.createElement('button');
   const btnText = document.createTextNode(title);
 
