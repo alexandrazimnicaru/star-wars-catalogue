@@ -16,9 +16,16 @@
 
   &__title {
     margin: 0;
+    font-size: 18px;
+    font-weight: bold;
 
     @media screen and (min-width: $small-up-breakpoint) {
       padding: 5px 0;
     }
+  }
+
+  &__img {
+    padding-right: 10px;
+    vertical-align: middle;
   }
 }
