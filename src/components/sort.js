@@ -10,10 +10,6 @@ const sortArrAscByProp = (arr, propName) => {
   }
 
   const sorted = arr.sort((a, b) => {
-    if (!a[propName] || !b[propName]) {
-      return 0;
-    }
-
     if (a[propName] < b[propName]) {
       return -1;
     }
@@ -33,10 +29,6 @@ const sortDescAscByProp = (arr, propName) => {
   }
 
   const sorted = arr.sort((a, b) => {
-    if (!a[propName] || !b[propName]) {
-      return 0;
-    }
-
     if (a[propName] < b[propName]) {
       return 1;
     }

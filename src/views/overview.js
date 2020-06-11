@@ -1,45 +1,91 @@
-import Catalogue from '../components/catalogue';
-import Navigation from '../components/navigation';
-import { getPeopleWithCount, searchPeopleWithCount } from '../services/api';
-
+import router from '../router'; 
+import { getPeople } from '../services/api';
+import { subscribe, publish } from '../services/observer';
+import { renderItemWithReadMore, renderNoResults } from '../helpers/render';
+import { RENDER_ITEMS, SYNC_ITEMS } from '../constants';
+ 
 export default class Overview {
   constructor() {
     this.renderWasCancelled = false;
+    this.wrapper = document.getElementById('root-view');
 
     this.init();
   }
 
   getQueryParams = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    return {
-      page: urlParams.get('page') || '1',
-      searchKeyWord: urlParams.get('search') || ''
-    };
+    return urlParams.get('search') || '';
   }
 
-  getPeople = (searchKeyWord, page) => {
-    if (searchKeyWord) {
-      return searchPeopleWithCount(searchKeyWord, page);
+  mapListItems = ({ height, mass, birthYear }) => ({
+    'Height': height || 'unkown',
+    'Mass': mass || 'unkown',
+    'Birth Year': birthYear ? `${birthYear}BBY` :  'unkown'
+  })
+
+  renderPeople = (updatedPeople = this.people) => {
+    const people = updatedPeople || this.people;
+    if (!people) {
+      return;
     }
 
-    return getPeopleWithCount(page);
+    const fragment = document.createDocumentFragment();
+
+    if (!people.length) {
+      fragment.appendChild(renderNoResults());
+    } else {
+      const ul = document.createElement('ul');
+      ul.classList.add('grid');
+      people.forEach((person) => {
+        const details = this.mapListItems(person);
+        const item = renderItemWithReadMore(person.name, details, { detail: person.id }, 'button--raised');
+        ul.appendChild(item);
+      });
+      fragment.appendChild(ul);
+    }
+
+    this.wrapper.innerHTML = '';
+    this.wrapper.appendChild(fragment);
+  }
+
+  navigateToDetail = (e) => {
+    if (e.target.matches('button')) {
+      const id = e.target.getAttribute('data-detail');
+      if (!id) {
+        return;
+      }
+
+      router.navigate(`detail/${id}`);
+    }
+  }
+
+  addNavigateListener = () => {
+    this.wrapper.addEventListener('click', this.navigateToDetail);
+  }
+
+  removeNavigateListener = () => {
+    this.wrapper.removeEventListener('click', this.navigateToDetail);
   }
 
   destroy = () => {
-    this.catalogue.destroy();
-    this.navigation.destroy();
+    this.removeNavigateListener();
+    this.renderSubs.unsubscribe();
     // avoid render after req finished on slow networks
     this.renderWasCancelled = true;
   }
 
   init = async () => {
-    const { page, searchKeyWord } = this.getQueryParams();
-    const { people, count } = await this.getPeople(searchKeyWord, page);
-    if (!people) {
+    // re-render items on updates
+    this.renderSubs = subscribe(RENDER_ITEMS, this.renderPeople);
+
+    this.addNavigateListener();
+  
+    this.people = await getPeople(this.getQueryParams());
+    if (!this.people || this.renderWasCancelled) {
       return;
     }
 
-    this.catalogue = new Catalogue(people);
-    this.navigation = new Navigation(count, page, searchKeyWord);
+    // sync items with other modules
+    publish(SYNC_ITEMS, this.people);
   }
 } 
