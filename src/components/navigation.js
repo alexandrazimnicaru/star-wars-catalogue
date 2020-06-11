@@ -1,7 +1,6 @@
 import router from '../router';
 import { renderBtnList } from '../helpers/render';
-import { subscribe } from '../services/observer';
-import { RESET_PAGES, RESULTS_PER_PAGE } from '../constants';
+import { RESULTS_PER_PAGE } from '../constants';
 
 export default class Navigation {
   constructor(count, current, searchKeyWord = '') {
@@ -50,15 +49,6 @@ export default class Navigation {
     this.wrapper.appendChild(renderBtnList(document.createElement('section'), this.getPageLinks()));
   }
 
-  renderOnReset = (searchKeyWord) => {
-    if (!searchKeyWord) {
-      router.navigate('');
-      return;
-    }
-
-    router.navigate(`?search=${searchKeyWord}&page=1`);
-  }
-
   navigateToPage = (e) => {
     if (e.target.matches('button')) {
       const page = e.target.getAttribute('data-page');
@@ -85,13 +75,9 @@ export default class Navigation {
   destroy = () => {
     this.wrapper.innerHTML = '';
     this.removeNavigateListener();
-    this.resetPagesSubs.unsubscribe();
   }
 
   init = () => {
-    // re-render pages on search
-    this.resetPagesSubs = subscribe(RESET_PAGES,  this.renderOnReset);
-
     this.renderPageLinks();
     this.addNavigateListener();
   }
