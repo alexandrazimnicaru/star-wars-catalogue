@@ -29,8 +29,6 @@ export default class Search {
     this.init();
   }
 
-  getSearchKeyWord = () => this.searchInput.value;
-
   clearSearch = () => {
     this.searchInput.value = '';
   }
