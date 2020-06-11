@@ -1,11 +1,9 @@
 import Catalogue from '../components/catalogue';
 import Navigation from '../components/navigation';
-import { getPeopleWithCount, searchPeopleWithCount } from '../services/api';
+import { getPeopleWithCount } from '../services/api';
 
 export default class Overview {
   constructor() {
-    this.renderWasCancelled = false;
-
     this.init();
   }
 
@@ -17,24 +15,14 @@ export default class Overview {
     };
   }
 
-  getPeople = (searchKeyWord, page) => {
-    if (searchKeyWord) {
-      return searchPeopleWithCount(searchKeyWord, page);
-    }
-
-    return getPeopleWithCount(page);
-  }
-
   destroy = () => {
     this.catalogue.destroy();
     this.navigation.destroy();
-    // avoid render after req finished on slow networks
-    this.renderWasCancelled = true;
   }
 
   init = async () => {
     const { page, searchKeyWord } = this.getQueryParams();
-    const { people, count } = await this.getPeople(searchKeyWord, page);
+    const { people, count } = await getPeopleWithCount(searchKeyWord, page);
     if (!people) {
       return;
     }
