@@ -35,3 +35,9 @@ export const parsePersonForDetail = (apiResponse, planet) => ({
   ...parsePerson(apiResponse),
   ...planet
 });
+
+// the api returns the next urls with http
+// but we get a CORS error in Safari with http, so re-write to https
+export const parseUrl = (url) => (
+  url && url.match('^http://') ? url.replace(/^http:\/\//i, 'https://') : url
+);
