@@ -73,7 +73,7 @@ export default class Sort {
   }
 
   addClassNameByDirection = (buttonEl) => {
-    const btn = buttonEl || document.querySelector(`button[data-sort=${this.currentSortProp}`);
+    const btn = buttonEl || document.querySelector(`button[data-sort="${this.currentSortProp}"]`);
     if (!btn) {
       return;
     }
