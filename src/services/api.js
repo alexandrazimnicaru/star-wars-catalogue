@@ -1,5 +1,5 @@
 import 'whatwg-fetch';
-import { parsePerson, parsePersonForDetail, parseResident } from '../helpers/parser';
+import { parsePerson, parsePersonForDetail, parseResident, parseUrl } from '../helpers/parser';
 import { publish } from './observer';
 import { SHOW_ERROR } from '../constants';
 
@@ -9,11 +9,11 @@ const GET_RESIDENTS_ERROR = 'An error occured while looking for Star Wars charac
 const GET_PLANET_ERROR = 'An error occured while looking your character\'s planet information, please try again or contact us';
 const GET_PERSON_ERROR = 'An error occured while looking for your character, please try again or contact us';
 
-export const getPeople = async (searchTerm = '') => {
+export const getPeople = async (searchTerm = '', page = 1) => {
   let people = [];
 
   try {
-    let url = `${BASE_URL}/people/?search=${searchTerm}&page=1`;
+    let url = `${BASE_URL}/people/?search=${searchTerm}&page=${page}`;
     while (url) {
       const response = await fetch(url);
       const jsonResponse = await response.json();
@@ -28,13 +28,12 @@ export const getPeople = async (searchTerm = '') => {
         people = people.concat(results.map(person => parsePerson(person)));
       }
 
-      url = next;
+      url = next && parseUrl(next);
     }
   } catch(err) {
     publish(SHOW_ERROR, GET_PEOPLE_ERROR);
     return [];
   }
-
   return people;
 };
 
@@ -46,11 +45,12 @@ export const getPlanetResidents = async (urls, currentPersonUrl) => {
   const residents = [];
   try {
     for (const url of urls) {
-      if (url === currentPersonUrl) {
+      const parsedUrl = parseUrl(url);
+      if (parsedUrl === currentPersonUrl) {
         continue;
       }
   
-      const response = await fetch(url);
+      const response = await fetch(parsedUrl);
       const jsonResponse = await response.json();
       if (!jsonResponse) {
         return [];
@@ -70,14 +70,15 @@ const getPlanetForPerson = async ({ homeworld, url }) => {
     return null;
   }
 
+  const planetUrl = parseUrl(homeworld);
   try {
-    const response = await fetch(homeworld);
+    const response = await fetch(planetUrl);
     const jsonResponse = await response.json();
     if (!jsonResponse) {
       return null;
     }
 
-    const residents = await getPlanetResidents(jsonResponse.residents, url);
+    const residents = await getPlanetResidents(jsonResponse.residents, parseUrl(url));
     return { planet: jsonResponse.name || '', residents };
   } catch(err) {
     publish(SHOW_ERROR, GET_PLANET_ERROR);
