@@ -10,10 +10,6 @@ const sortArrAscByProp = (arr, propName) => {
   }
 
   const sorted = arr.sort((a, b) => {
-    if (!a[propName] || !b[propName]) {
-      return 0;
-    }
-
     if (a[propName] < b[propName]) {
       return -1;
     }
@@ -33,10 +29,6 @@ const sortDescAscByProp = (arr, propName) => {
   }
 
   const sorted = arr.sort((a, b) => {
-    if (!a[propName] || !b[propName]) {
-      return 0;
-    }
-
     if (a[propName] < b[propName]) {
       return 1;
     }
@@ -71,7 +63,7 @@ export default class Sort {
   }
 
   toggleClassNameByDirection = (buttonEl) => {
-    const btn = buttonEl || document.querySelector(`button[data-sort=${this.currentSortProp}`);
+    const btn = buttonEl || document.querySelector(`button[data-sort=${this.currentSortProp}]`);
     if (!btn) {
       return;
     }
@@ -81,7 +73,7 @@ export default class Sort {
   }
 
   addClassNameByDirection = (buttonEl) => {
-    const btn = buttonEl || document.querySelector(`button[data-sort=${this.currentSortProp}`);
+    const btn = buttonEl || document.querySelector(`button[data-sort=${this.currentSortProp}]`);
     if (!btn) {
       return;
     }

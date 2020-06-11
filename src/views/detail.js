@@ -13,7 +13,7 @@ export default class Detail {
   mapListItems = ({ height, mass, birthYear, planet }) => ({
     'Height': height || 'unkown',
     'Mass': mass || 'unkown',
-    'Birth Year': birthYear && birthYear !== 'unkown' ? `${birthYear}BBY` :  'unkown',
+    'Birth Year': birthYear ? `${birthYear}BBY` :  'unkown',
     'Planet': planet || 'unkown'
   })
 

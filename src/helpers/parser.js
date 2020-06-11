@@ -13,17 +13,22 @@ export const parseResident = (apiResponse) => ({
   name: apiResponse.name || ''
 });
 
+
 export const parsePerson = (apiResponse) => {
   if (!apiResponse) {
     return null;
   }
-  
+
+  const height = parseInt(apiResponse.height, 10);
+  const mass = parseInt(apiResponse.mass, 10);
+  const birthYear = parseFloat(apiResponse.birth_year);
+
   return {
     id: parseId(apiResponse.url),
     name: apiResponse.name || '',
-    height: apiResponse.height ? parseInt(apiResponse.height, 10) : null,
-    mass: apiResponse.mass ? parseInt(apiResponse.mass, 10) : null,
-    birthYear: apiResponse.birth_year && apiResponse.birth_year !== 'unkown' ? parseFloat(apiResponse.birth_year) : 'unkown'
+    height: isNaN(height) ? 0 : height,
+    mass: isNaN(mass) ? 0 : mass,
+    birthYear: isNaN(birthYear) ? 0 : birthYear
   };
 };
 
@@ -31,3 +36,9 @@ export const parsePersonForDetail = (apiResponse, planet) => ({
   ...parsePerson(apiResponse),
   ...planet
 });
+
+// the api returns the next urls with http
+// but we get a CORS error in Safari with http, so re-write to https
+export const parseUrl = (url) => (
+  url && url.match('^http://') ? url.replace(/^http:\/\//i, 'https://') : url
+);

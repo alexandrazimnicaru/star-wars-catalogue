@@ -1,6 +1,5 @@
-import { searchPeopleWithCount } from '../services/api';
 import { publish } from '../services/observer';
-import { SYNC_ITEMS, RENDER_ITEMS, RESET_PAGES } from '../constants';
+import { RESET_PAGES } from '../constants';
 
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for
@@ -30,16 +29,11 @@ export default class Search {
     this.init();
   }
 
-  getSearchKeyWord = () => this.searchInput.value;
-
   clearSearch = () => {
     this.searchInput.value = '';
   }
 
   search = async () => {
-    const { people } = await searchPeopleWithCount(this.searchInput.value);
-    publish(SYNC_ITEMS, people);
-    publish(RENDER_ITEMS, people);
     publish(RESET_PAGES, this.searchInput.value);
   }
 
